@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.message.drive.dao.SendMessageMapper">
+  <resultMap id="BaseResultMap" type="com.message.drive.model.SendMessage">
+    <id column="message_id" jdbcType="VARCHAR" property="messageId" />
+    <result column="business_type" jdbcType="VARCHAR" property="businessType" />
+    <result column="business_id" jdbcType="BIGINT" property="businessId" />
+    <result column="exchange" jdbcType="VARCHAR" property="exchange" />
+    <result column="routing_key" jdbcType="VARCHAR" property="routingKey" />
+    <result column="data" jdbcType="VARCHAR" property="data" />
+    <result column="gmt_send" jdbcType="TIMESTAMP" property="gmtSend" />
+    <result column="gmt_confirm" jdbcType="TIMESTAMP" property="gmtConfirm" />
+    <result column="message_state" jdbcType="TINYINT" property="messageState" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    message_id, business_type, business_id, exchange, routing_key, `data`, gmt_send, gmt_confirm, message_state,
+    gmt_create, gmt_modify
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cs_send_message
+    where message_id = #{messageId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from cs_send_message
+    where message_id = #{messageId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.message.drive.model.SendMessage">
+    insert into cs_send_message (message_id, business_type, business_id, exchange, routing_key,
+      `data`, gmt_send, gmt_confirm, 
+      message_state, gmt_create, gmt_modify
+      )
+    values (#{messageId,jdbcType=VARCHAR}, #{businessType,jdbcType=VARCHAR}, #{businessId,jdbcType=BIGINT},
+      #{exchange,jdbcType=VARCHAR}, #{routingKey,jdbcType=VARCHAR}, #{data,jdbcType=VARCHAR},
+      #{gmtSend,jdbcType=TIMESTAMP}, #{gmtConfirm,jdbcType=TIMESTAMP},
+      #{messageState,jdbcType=TINYINT}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.message.drive.model.SendMessage">
+    insert into cs_send_message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="messageId != null">
+        message_id,
+      </if>
+      <if test="businessType != null">
+        business_type,
+      </if>
+      <if test="businessId != null">
+        business_id,
+      </if>
+      <if test="exchange != null">
+        exchange,
+      </if>
+      <if test="routingKey != null">
+        routing_key,
+      </if>
+      <if test="data != null">
+        `data`,
+      </if>
+      <if test="gmtSend != null">
+        gmt_send,
+      </if>
+      <if test="gmtConfirm != null">
+        gmt_confirm,
+      </if>
+      <if test="messageState != null">
+        message_state,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModify != null">
+        gmt_modify,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="messageId != null">
+        #{messageId,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null">
+        #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null">
+        #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="exchange != null">
+        #{exchange,jdbcType=VARCHAR},
+      </if>
+      <if test="routingKey != null">
+        #{routingKey,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null">
+        #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtSend != null">
+        #{gmtSend,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtConfirm != null">
+        #{gmtConfirm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="messageState != null">
+        #{messageState,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModify != null">
+        #{gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.message.drive.model.SendMessage">
+    update cs_send_message
+    <set>
+      <if test="businessType != null">
+        business_type = #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null">
+        business_id = #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="data != null">
+        `data` = #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="exchange != null">
+        exchange = #{exchange,jdbcType=VARCHAR},
+      </if>
+      <if test="data != null">
+        routing_key = #{routingKey,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtSend != null">
+        gmt_send = #{gmtSend,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtConfirm != null">
+        gmt_confirm = #{gmtConfirm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="messageState != null">
+        message_state = #{messageState,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModify != null">
+        gmt_modify = #{gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where message_id = #{messageId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.message.drive.model.SendMessage">
+    update cs_send_message
+    set business_type = #{businessType,jdbcType=VARCHAR},
+      business_id = #{businessId,jdbcType=BIGINT},
+      exchange = #{exchange,jdbcType=VARCHAR},
+      routing_key = #{routingKey,jdbcType=VARCHAR},
+      `data` = #{data,jdbcType=VARCHAR},
+      gmt_send = #{gmtSend,jdbcType=TIMESTAMP},
+      gmt_confirm = #{gmtConfirm,jdbcType=TIMESTAMP},
+      message_state = #{messageState,jdbcType=TINYINT},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modify = #{gmtModify,jdbcType=TIMESTAMP}
+    where message_id = #{messageId,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 根据业务订单号查询列表-->
+  <select id="findByBusinessId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cs_send_message
+    where business_id = #{businessId,jdbcType=BIGINT}
+    </select>
+  <select id="findOverdueOrder" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cs_send_message
+    WHERE
+    <![CDATA[
+        gmt_create <= #{endGmtCreate,jdbcType=VARCHAR}
+    ]]>
+    AND message_state in
+    <foreach item="item" collection="sendStateList" separator="," open="(" close=")" index="">
+      #{item,jdbcType=INTEGER}
+    </foreach>
+  </select>
+</mapper>

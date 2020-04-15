@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.message.drive.dao.ReceiveMessageMapper">
+  <resultMap id="BaseResultMap" type="com.message.drive.model.ReceiveMessage">
+    <id column="message_id" jdbcType="VARCHAR" property="messageId" />
+    <result column="business_type" jdbcType="VARCHAR" property="businessType" />
+    <result column="business_id" jdbcType="BIGINT" property="businessId" />
+    <result column="data" jdbcType="VARCHAR" property="data" />
+    <result column="gmt_receive" jdbcType="TIMESTAMP" property="gmtReceive" />
+    <result column="handle_state" jdbcType="TINYINT" property="handleState" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modify" jdbcType="TIMESTAMP" property="gmtModify" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    message_id, business_type, business_id, `data`, gmt_receive, handle_state, gmt_create, 
+    gmt_modify
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from cs_receive_message
+    where message_id = #{messageId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from cs_receive_message
+    where message_id = #{messageId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.message.drive.model.ReceiveMessage">
+    insert into cs_receive_message (message_id, business_type, business_id, 
+      `data`, gmt_receive, handle_state, 
+      gmt_create, gmt_modify)
+    values (#{messageId,jdbcType=VARCHAR}, #{businessType,jdbcType=VARCHAR}, #{businessId,jdbcType=BIGINT},
+      #{data,jdbcType=VARCHAR}, #{gmtReceive,jdbcType=TIMESTAMP}, #{handleState,jdbcType=TINYINT},
+      #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModify,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.message.drive.model.ReceiveMessage">
+    insert into cs_receive_message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="messageId != null">
+        message_id,
+      </if>
+      <if test="businessType != null">
+        business_type,
+      </if>
+      <if test="businessId != null">
+        business_id,
+      </if>
+      <if test="data != null">
+        `data`,
+      </if>
+      <if test="gmtReceive != null">
+        gmt_receive,
+      </if>
+      <if test="handleState != null">
+        handle_state,
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create,
+      </if>
+      <if test="gmtModify != null">
+        gmt_modify,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="messageId != null">
+        #{messageId,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null">
+        #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null">
+        #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="data != null">
+        #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtReceive != null">
+        #{gmtReceive,jdbcType=TIMESTAMP},
+      </if>
+      <if test="handleState != null">
+        #{handleState,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModify != null">
+        #{gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.message.drive.model.ReceiveMessage">
+    update cs_receive_message
+    <set>
+      <if test="businessType != null">
+        business_type = #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null">
+        business_id = #{businessId,jdbcType=BIGINT},
+      </if>
+      <if test="data != null">
+        `data` = #{data,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtReceive != null">
+        gmt_receive = #{gmtReceive,jdbcType=TIMESTAMP},
+      </if>
+      <if test="handleState != null">
+        handle_state = #{handleState,jdbcType=TINYINT},
+      </if>
+      <if test="gmtCreate != null">
+        gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="gmtModify != null">
+        gmt_modify = #{gmtModify,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where message_id = #{messageId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.message.drive.model.ReceiveMessage">
+    update cs_receive_message
+    set business_type = #{businessType,jdbcType=VARCHAR},
+      business_id = #{businessId,jdbcType=BIGINT},
+      `data` = #{data,jdbcType=VARCHAR},
+      gmt_receive = #{gmtReceive,jdbcType=TIMESTAMP},
+      handle_state = #{handleState,jdbcType=TINYINT},
+      gmt_create = #{gmtCreate,jdbcType=TIMESTAMP},
+      gmt_modify = #{gmtModify,jdbcType=TIMESTAMP}
+    where message_id = #{messageId,jdbcType=VARCHAR}
+  </update>
+
+  <!-- 根据业务订单和查询接收消息列表 -->
+  <select id="findByBusinessId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cs_receive_message
+    where business_id = #{businessId,jdbcType=BIGINT}
+    </select>
+
+  <select id="findOverdueOrder" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from cs_receive_message
+    WHERE
+    <![CDATA[
+        gmt_create <= #{endGmtCreate,jdbcType=VARCHAR}
+    ]]>
+    AND handle_state in
+    <foreach item="item" collection="receiveStateList" separator="," open="(" close=")" index="">
+      #{item,jdbcType=INTEGER}
+    </foreach>
+  </select>
+</mapper>
